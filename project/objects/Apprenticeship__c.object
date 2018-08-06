@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <validationRules>
+        <fullName>No_Edit_after_Billing_Complete</fullName>
+        <active>true</active>
+        <description>Student Engagement, Site Location, IWS, Cohort, etc., this rule put in place to lock only after internship start date has passed and Billing Details Complete is marked “Yes.” (CA-13497)</description>
+        <errorConditionFormula>AND
+( 
+					   ISPICKVAL( Billing_Details_Complete__c, &apos;Yes&apos; ),
+					   Today() &gt; Start_Date__c,
+  		    ISCHANGED( Student__c ),
+				    NOT(ISBLANK( PRIORVALUE( Student__c)))
+)
+
+||
+
+AND
+( 
+					   ISPICKVAL( Billing_Details_Complete__c, &apos;Yes&apos; ),
+					   Today() &gt; Start_Date__c,
+  		    OR(
+												ISCHANGED( Opportunity__c ),
+												ISCHANGED( InternshipWorkSite__c )											
+								)  
+				   
+)</errorConditionFormula>
+        <errorMessage>This field can&apos;t be edited as Billing Details are completed. CE team reach out to salesoperationsandsupport@yearup.org and IS team reach out to mtobinhochstadt@yearup.org for help.</errorMessage>
+    </validationRules>
+</CustomObject>
